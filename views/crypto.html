@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crypto Price Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js"></script>
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    #chart_div {
+      width: 100%;
+      height: 500px;
+      margin-top: 20px;
+    }
+    .controls {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    select {
+      padding: 10px;
+      font-size: 16px;
+    }
+    #price-info {
+      text-align: center;
+      font-size: 18px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Crypto Price Tracker</h1>
+
+  <div class="controls">
+    <select id="crypto-select" onchange="updateChart()">
+      <option value="bitcoin">Bitcoin (BTC)</option>
+      <option value="ethereum">Ethereum (ETH)</option>
+      <option value="solana">Solana (SOL)</option>
+      <option value="dogecoin">Dogecoin (DOGE)</option>
+      <option value="ripple">Ripple (XRP)</option>
+      <option value="cardano">Cardano (ADA)</option>
+      <option value="shiba-inu">Shiba Inu (SHIB)</option>
+      <option value="polkadot">Polkadot (DOT)</option>
+    </select>
+    <select id="time-period" onchange="updateChart()">
+      <option value="1">1 Day</option>
+      <option value="7">1 Week</option>
+      <option value="30">1 Month</option>
+      <option value="90">3 Months</option>
+      <option value="180">6 Months</option>
+      <option value="730">2 Years</option>
+    </select>
+  </div>
+
+  <div id="price-info">Loading...</div>
+  <div id="chart_div"></div>
+
+  <script>
+    google.charts.load('current', { packages: ['corechart', 'line'] });
+
+    async function fetchCryptoData(cryptoSymbol, days = 730) {
+      const url = `https://api.coingecko.com/api/v3/coins/${cryptoSymbol}/market_chart?vs_currency=usd&days=${days}`;
+      try {
+        const response = await axios.get(url);
+        return response.data.prices.map(price => [new Date(price[0]), price[1]]);
+      } catch (error) {
+        console.error("Error fetching crypto data", error);
+        return [];
+      }
+    }
+
+    async function drawChart() {
+      const timePeriod = document.getElementById('time-period').value;
+      const selectedCrypto = document.getElementById('crypto-select').value;
+      const cryptoData = await fetchCryptoData(selectedCrypto, timePeriod);
+
+      if (cryptoData.length === 0) {
+        document.getElementById('price-info').innerText = "Error fetching data. Try again later.";
+        return;
+      }
+
+      const today = new Date();
+      cryptoData.push([today, cryptoData[cryptoData.length - 1][1]]);
+
+      const dataArray = [['Date', `${selectedCrypto.toUpperCase()} Price`], ...cryptoData];
+      const data = google.visualization.arrayToDataTable(dataArray);
+
+      const options = {
+        title: `${selectedCrypto.toUpperCase()} Price Trends`,
+        width: '100%',
+        height: 500,
+        hAxis: { title: 'Date', format: 'M/d/yy' },
+        vAxis: { title: 'Price in USD' },
+        colors: [(cryptoData[cryptoData.length - 1][1] > cryptoData[0][1] ? 'green' : 'red')] // Changes color based on increase or decrease
+      };
+
+      const chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+      chart.draw(data, options);
+
+      const priceChange = (cryptoData[cryptoData.length - 1][1] - cryptoData[0][1]).toFixed(2);
+      const percentageChange = ((priceChange / cryptoData[0][1]) * 100).toFixed(2);
+      const priceInfo = `<p><strong>${selectedCrypto.toUpperCase()}:</strong> 
+                         <span style="color: ${priceChange > 0 ? 'green' : 'red'};">
+                           ${priceChange > 0 ? '+' : ''}${priceChange} USD 
+                           (${priceChange > 0 ? '+' : ''}${percentageChange}%)</span></p>`;
+      document.getElementById('price-info').innerHTML = priceInfo;
+    }
+
+    google.charts.setOnLoadCallback(drawChart);
+    function updateChart() { drawChart(); }
+  </script>
+</body>
+</html>

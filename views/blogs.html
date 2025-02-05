@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Blog Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/11.1.0/marked.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(to bottom right, #e0f2f7, #bbdefb);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #37474f;
+            padding: 20px; /* Add some padding to the body */
+        }
+
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            color: #1a237e;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+            max-width: 800px; /* Increased max-width */
+            width: 95%;
+            margin-bottom: 20px; /* Space below the container */
+        }
+
+        input[type="text"] {
+            width: calc(100% - 100px); /* Adjust width for button */
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        input[type="text"]:focus {
+            border-color: #64b5f6;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        button {
+            background-color: #2196f3;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background-color 0.15s ease-in-out;
+        }
+
+        button:hover {
+            background-color: #1976d2;
+        }
+
+        #mdDisplay {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            overflow-wrap: break-word;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            white-space: pre-wrap; /* Preserve whitespace and wrap text */
+        }
+
+        /* Styles for Markdown elements within #mdDisplay */
+        #mdDisplay h1,
+        #mdDisplay h2,
+        #mdDisplay h3 {
+            color: #212529; /* Darker headings */
+        }
+
+        #mdDisplay p,
+        #mdDisplay li {
+            color: #343a40; /* Slightly lighter text */
+            line-height: 1.6; /* Improved line height for readability */
+        }
+
+        #mdDisplay code {
+            background-color: #f0f0f0;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) { /* Adjust breakpoint as needed */
+            .container {
+                padding: 20px;
+            }
+
+            input[type="text"] {
+                width: calc(100% - 80px); /* Adjust for smaller screens */
+            }
+
+            button {
+                padding: 10px 15px; /* Adjust button padding */
+                font-size: 14px;
+            }
+
+            #mdDisplay {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>AI Blog Generator</h1>
+    <div class="container">
+        Generate a blog about <input type="text" id="topic">
+        <button onclick="writeBlog()">Generate</button>
+        <div id="mdDisplay"></div>
+    </div>
+    <script>
+        async function writeBlog(){
+            try {
+                const response = await fetch('/api/gemini', { // Your server-side proxy
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ prompt: "Generate a informative blog about "+document.querySelector('input').value , modeType: ""})
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                // displayMessage(data.text, 'bot'); // Access the 'text' property
+                const botResponse = data.text || "No response received.";
+                displayMessage(botResponse);
+            } catch (error) {
+                console.error('Error:', error);
+                displayMessage("Error communicating with the server.");
+            }
+        }
+        function displayMessage(message) {
+            document.querySelector('#mdDisplay').innerHTML = marked.parse(message);
+        }
+    </script>
+</body>
+
+</html>

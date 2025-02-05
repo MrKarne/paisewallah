@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indian Tax Calculator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <style>
+        *{
+            /* margin:0;
+            padding:0; */
+            box-sizing: border-box;
+        }
+        body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* height: 100vh; */
+    margin: 12px;
+}
+
+.container {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+}
+
+h2 {
+    color: #333;
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+input, select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    background-color: #28a745;
+    color: white;
+    padding: 10px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+#result {
+    margin-top: 20px;
+    padding: 10px;
+    background: #e9ecef;
+    border-radius: 5px;
+    text-align: left;
+    font-size: 14px;
+    color: #333;
+    overflow-wrap: break-word;
+}
+
+    </style>
+</head>
+<body>
+    <div>
+        <br>
+        <h2>Indian Tax Calculator (FY 2024-25 & FY 2025-26)</h2>
+        <hr>
+        <label>Annual Income (₹):</label>
+        <input type="number" id="income"><br>
+        <label>Section 80C Deductions (₹):</label>
+        <input type="number" id="deductions"><br>
+        <label>HRA Exemption (₹):</label>
+        <input type="number" id="hra"><br>
+        <label>Charity Donations (₹):</label>
+        <input type="number" id="charity"><br>
+        <label>Medical Insurance (₹):</label>
+        <input type="number" id="medical"><br>
+        <label>Assessment Year:</label>
+        <select id="year">
+            <option value="2024-25">FY 2024-25</option>
+            <option value="2025-26">FY 2025-26</option>
+        </select><br>
+        <label>Tax Regime:</label>
+        <select id="regime">
+            <option value="new">New Regime</option>
+            <option value="old">Old Regime</option>
+        </select>
+        <button onclick="calculateTax()">Calculate</button>
+        <div id="result"></div>
+        <br>
+    </div>
+
+
+    <script>
+        function calculateTax() {
+            let income = parseFloat(document.getElementById("income").value);
+            let deductions = parseFloat(document.getElementById("deductions").value) || 0;
+            let hra = parseFloat(document.getElementById("hra").value) || 0;
+            let charity = parseFloat(document.getElementById("charity").value) || 0;
+            let medical = parseFloat(document.getElementById("medical").value) || 0;
+            let regime = document.getElementById("regime").value;
+            let year = document.getElementById("year").value;
+            
+            let standardDeduction = 50000;
+            let totalDeductions = deductions + hra + charity + medical + standardDeduction;
+            let taxableIncome = Math.max(0, income - totalDeductions);
+            let tax = 0;
+            let breakdown = `Total Income: ₹${income.toFixed(2)}<br>`;
+            breakdown += `Total Deductions (including ₹50,000 standard deduction): ₹${totalDeductions.toFixed(2)}<br>`;
+            breakdown += `Taxable Income: ₹${taxableIncome.toFixed(2)}<br><br>`;
+            
+            if (isNaN(income) || income < 0) {
+                document.getElementById("result").innerHTML = "Please enter a valid income.";
+                return;
+            }
+            
+            if (year === "2025-26" && regime === "new") {
+                if (taxableIncome <= 1200000) {
+                    breakdown += "Your taxable income is below ₹12,00,000, so no tax applies due to rebate.";
+                } else {
+                    let slabs = [0, 300000, 600000, 900000, 1200000, 1500000];
+                    let rates = [0, 5, 10, 15, 20, 30];
+                    for (let i = 1; i < slabs.length; i++) {
+                        if (taxableIncome > slabs[i]) {
+                            let taxable = Math.min(taxableIncome, slabs[i+1] || taxableIncome) - slabs[i];
+                            let slabTax = (taxable * rates[i]) / 100;
+                            tax += slabTax;
+                            breakdown += `₹${slabs[i]} - ₹${slabs[i+1] || "above"}: ${rates[i]}% tax on ₹${taxable} = ₹${slabTax.toFixed(2)}<br>`;
+                        }
+                    }
+                }
+            } else if (regime === "new") {
+                if (taxableIncome <= 700000) {
+                    breakdown += "Your taxable income is below ₹7,00,000, so no tax applies due to rebate.";
+                } else {
+                    let slabs = [0, 300000, 600000, 900000, 1200000, 1500000];
+                    let rates = [0, 5, 10, 15, 20, 30];
+                    for (let i = 1; i < slabs.length; i++) {
+                        if (taxableIncome > slabs[i]) {
+                            let taxable = Math.min(taxableIncome, slabs[i+1] || taxableIncome) - slabs[i];
+                            let slabTax = (taxable * rates[i]) / 100;
+                            tax += slabTax;
+                            breakdown += `₹${slabs[i]} - ₹${slabs[i+1] || "above"}: ${rates[i]}% tax on ₹${taxable} = ₹${slabTax.toFixed(2)}<br>`;
+                        }
+                    }
+                }
+            } else {
+                if (taxableIncome <= 250000) {
+                    breakdown += "Your taxable income is below ₹2,50,000, so no tax applies.";
+                } else {
+                    let slabs = [0, 250000, 500000, 1000000];
+                    let rates = [0, 5, 20, 30];
+                    for (let i = 1; i < slabs.length; i++) {
+                        if (taxableIncome > slabs[i]) {
+                            let taxable = Math.min(taxableIncome, slabs[i+1] || taxableIncome) - slabs[i];
+                            let slabTax = (taxable * rates[i]) / 100;
+                            tax += slabTax;
+                            breakdown += `₹${slabs[i]} - ₹${slabs[i+1] || "above"}: ${rates[i]}% tax on ₹${taxable} = ₹${slabTax.toFixed(2)}<br>`;
+                        }
+                    }
+                    if (taxableIncome <= 500000) {
+                        breakdown += "Since your taxable income is below ₹5,00,000, you get a rebate under Section 87A, making tax ₹0.";
+                        tax = 0;
+                    }
+                }
+            }
+            
+            let cess = tax * 0.04;
+            let totalTax = tax + cess;
+            breakdown += `<br><b>Tax: ₹${tax.toFixed(2)}</b><br>Cess (4%): ₹${cess.toFixed(2)}<br><b>Total Payable Tax: ₹${totalTax.toFixed(2)}</b>`;
+            document.getElementById("result").innerHTML = breakdown;
+        }
+    </script>
+
+    
+</body>
+</html>

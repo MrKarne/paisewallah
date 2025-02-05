@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif; /* Calm, readable font */
+            margin: 0;
+            padding: 0;
+            line-height: 1.7; /* Improved line height */
+            color: #333; /* Dark, readable text */
+            background-color: #f8f9fa; /* Very light gray background */
+        }
+
+        header {
+            background-color: #fff; /* White header */
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        }
+
+        nav {
+            background-color: #343a40; /* Dark, calming nav */
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 8px 15px; /* Added padding */
+            border-radius: 5px; /* Rounded corners */
+            transition: background-color 0.3s ease; /* Smooth transition */
+        }
+
+        nav a:hover {
+            background-color: #555;
+        }
+
+        .hero {
+            background-color: #fff;
+            padding: 80px 0;
+            text-align: center;
+        }
+                .hero h1{
+                    font-size: 2.5em;
+                }
+        .hero p {
+            font-size: 1.2em;
+            color: #666; /* Slightly lighter text */
+            max-width: 800px; /* Limit width for readability */
+            margin: 20px auto; /* Center the paragraph */
+        }
+
+        .services {
+            padding: 80px 0;
+            background-color: #f9f9f9; /* Very light gray background for services */
+        }
+
+        .services h2 {
+            text-align: center;
+            margin-bottom: 60px;
+            color: #333;
+        }
+
+        .service {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            padding: 0px;
+            max-width: 1200px; /* Set a maximum width for the container */
+            margin: 0 auto; /* Center the container */
+        }
+
+        .service-content {
+            flex: 1;
+            padding: 0 40px; /* Increased padding */
+        }
+
+        .service-content h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .service-content p {
+            color: #666; /* Lighter text for descriptions */
+            line-height: 1.8;
+        }
+
+        .service-image {
+            flex: 1;
+            text-align: center;
+        }
+
+        .service-image img {
+            max-width: 90%; /* Slightly smaller images */
+            height: auto;
+            border-radius: 8px; /* Rounded corners for images */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow on images */
+        }
+
+        .service:nth-child(even) .service-image {
+            order: 1;
+        }
+        .service:nth-child(even) .service-content {
+            order: 2;
+        }
+
+        footer {
+            background-color: #343a40;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 992px) { /* Adjust breakpoint as needed */
+            .service {
+                flex-direction: column;
+                text-align: center;
+            }
+            .service-image {
+                order: 1;
+            }
+            .service-content {
+                order: 2;
+                padding: 20px;
+            }
+                        .hero h1{
+                            font-size: 2em;
+                        }
+                        .hero p{
+                            font-size: 1.1em;
+                        }
+        }
+        img {
+            transform: scale(0.7); /* 0.7 represents 70% */
+        }
+    </style>
+</head>
+<body>
+
+    <section class="services">
+        <h2>We have everything you NEED to get started</h2>
+
+        <div class="service">
+            <div class="service-content">
+                <h3>AI Assistant</h3>
+                <p>Our AI-powered assistant provides personalized financial advice and insights, helping you make informed decisions about your investments, budgeting, and financial goals.</p>
+            </div>
+            <div class="service-image">
+                <img src="./robot.png" alt="AI Assistant">
+            </div>
+        </div>
+
+        <div class="service">
+            <div class="service-content">
+                <h3>Crypto Tracker</h3>
+                <p>Stay ahead with our crypto tracker. Get real-time updates on prices. Our interactive charts help you visualize trends and make informed trading decisions, whether you're a seasoned trader or just starting out.</p>
+            </div>
+            <div class="service-image">
+                <img src="./crypto.png" alt="Financial Planning">
+            </div>
+        </div>
+
+        <div class="service">
+            <div class="service-content">
+                <h3>AI Blog</h3>
+                <p>Navigate finance easily with our AI-powered blog. We deliver insightful articles and analysis on various financial topics, from investment strategies to market trends.  Stay informed and make smarter financial decisions.</p>
+            </div>
+            <div class="service-image">
+                <img src="blogs.png" alt="Investment Management">
+            </div>
+        </div>
+
+        <div class="service">
+            <div class="service-content">
+                <h3>Finance quiz</h3>
+                <p>Test your financial acumen with our engaging finance quiz!  Challenge yourself with questions covering various financial concepts.  See how your knowledge stacks up and identify areas where you can learn more to improve your financial literacy.</p>
+            </div>
+            <div class="service-image">
+                <img src="./test.png" alt="Retirement Planning">
+            </div>
+        </div>
+
+    </section>
+
+    </body>
+</html>

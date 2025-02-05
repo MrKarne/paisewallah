@@ -1,0 +1,124 @@
+<!-- This website is created for solution challenge for GDGC -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paise Wallah</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="./gdgcLogo.jpg" type="image/x-icon">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            /* background-color: #1a1a1a; */
+            color: white;
+        }
+        .navbar {
+            background-color: #222;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            flex-flow: row-reverse;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        .menu {
+            display: flex;
+            gap: 25px;
+        }
+        .menu a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+        .menu a:hover {
+            color: #f39c12;
+        }
+        .menu-toggle {
+            display: none;
+            font-size: 26px;
+            cursor: pointer;
+        }
+        .iframe-container {
+            flex: 1;
+            display: flex;
+            /* background-color: #1a1a1a; */
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        @media (max-width: 768px) {
+            .menu {
+                display: none;
+                flex-direction: column;
+                background-color: #222;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                padding: 10px 0;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            }
+            .menu a {
+                padding: 12px;
+                display: block;
+                text-align: center;
+            }
+            .menu-toggle {
+                display: block;
+            }
+            .navbar {
+                flex-flow: row;
+            }
+            .title{
+                display: none;
+            }
+        }
+    </style>
+    <script>
+        function toggleMenu() {
+            const menu = document.querySelector('.menu');
+            menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+        }
+        function iframeLink(page){
+            document.querySelector('iframe').src = page;
+        }
+    </script>
+</head>
+<body>
+    <div class="navbar">
+        <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+        <div class="menu">
+            <a onclick="iframeLink('./home.html')">Home</a>
+            <a onclick="iframeLink('./chat.html')">AI Chat</a>
+            <a onclick="iframeLink('./tools.html')">Tools</a>
+            <a onclick="iframeLink('./crypto.html')">Crypto Tracker</a>
+            <a onclick="iframeLink('./blogs.html')">AI Blog</a>
+            <a onclick="iframeLink('https://docs.google.com/forms/d/e/1FAIpQLScK2xWyHnHAptuW48hFNTODwQ4woEfE3n1vU-XNebIvnPDG3A/viewform?usp=header')">Quiz</a>
+        </div>
+        <div class="title"><h3><i>Paise</i>Wallah</h3></div>
+    </div>
+    <div class="iframe-container">
+        <iframe src="./home.html"></iframe>
+    </div>
+    <footer style="background-color: #333; color: #fff; padding: 10px; text-align: center; font-family: sans-serif; margin-top: 20px;">
+        Made with ♥ for Solutions Challenge, GDGC
+      </footer>
+</body>
+</html>
