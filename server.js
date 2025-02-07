@@ -1,14 +1,14 @@
 require('dotenv').config();
-const express = require('express');
+const express = require('express'); // simple backend framework
 const app = express();
 const path = require('path');
-const cors = require('cors');
+const cors = require('cors'); // to prevent ocrs error 
 const corsOptions = require('./config/corsOptions');
 // const { logger } = require('./middleware/logEvents');
 // const errorHandler = require('./middleware/errorHandler');
 const credentials = require('./middleware/credentials');
 const cookieParser = require('cookie-parser');
-const { GoogleGenerativeAI } = require('@google/generative-ai');
+const { GoogleGenerativeAI } = require('@google/generative-ai'); // ai generation
 // const verifyAccessTokenOrRefresh = require('./middleware/checkToken')
 
 const PORT = process.env.PORT || 8080;
@@ -34,7 +34,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 //serve static files
-app.use('/', express.static(path.join(__dirname, '/views')));
+app.use('/', express.static(path.join(__dirname, '/views')));// static files serve
 
 const genAI = new GoogleGenerativeAI(process.env.geminiapi); // API key is safe here
 const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
@@ -46,7 +46,8 @@ app.post('/api/gemini', async (req, res) => {
     const modeType = req.body.modeType;
     
     const systemPrompt = "You are a financial assistant. Only answer questions related to finance, investment, money, property, stocks, and cryptocurrency or simply greeting or bye. If a question is unrelated, politely decline to answer. Be concise while answering but answer should not be too short. Answer should be in markdown format.";
-    
+    // to make it exclusive for finance related chat
+
     try {
         const result = await model.generateContent(systemPrompt+modeType+'\n'+prompt);
         // console.log(result.response.text());
