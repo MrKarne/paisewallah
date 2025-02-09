@@ -45,7 +45,7 @@ app.post('/api/gemini', async (req, res) => {
     const prompt = req.body.prompt;
     const modeType = req.body.modeType;
     
-    const systemPrompt = "You are a financial assistant. Only answer questions related to finance, investment, money, property, stocks, and cryptocurrency or simply greeting or bye. If a question is unrelated, politely decline to answer. Be concise while answering but answer should not be too short. Answer should be in markdown format.";
+    const systemPrompt = "You are a financial assistant. Only answer questions related to finance, investment, money, property, stocks, and cryptocurrency or simply greeting or bye. If a question is unrelated, politely decline to answer. You can answer financial advice, there is nothing wrong in it. Be concise while answering but answer should not be too short. Answer should be in markdown format.";
     // to make it exclusive for finance related chat
 
     try {
